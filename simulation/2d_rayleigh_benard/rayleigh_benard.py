@@ -45,13 +45,13 @@ logger = logging.getLogger(__name__)
 def get_args():
     parser = argparse.ArgumentParser(
         description='Simulation script for Rayleigh-Benard 2D using Dedalus')
-    parser.add_argument('--lx', default=4.0, type=float,
+    parser.add_argument('--lx', default=16, type=float,
                         help='Physical length in x dimension. (default: 4.0)')
-    parser.add_argument('--lz', default=1.0, type=float,
+    parser.add_argument('--lz', default=9.0, type=float,
                         help='Physical length in z dimension. (default: 1.0)')
-    parser.add_argument('--res_x', default=512, type=int,
+    parser.add_argument('--res_x', default=960, type=int,
                         help='Simulation resolution in x dimension. (default: 512)')
-    parser.add_argument('--res_z', default=128, type=int,
+    parser.add_argument('--res_z', default=540, type=int,
                         help='Simulation resolution in z dimension. (default: 128)')
     parser.add_argument('--dt', default=0.125, type=float,
                         help='Simulation step size in time. (default: 0.125)')
@@ -146,12 +146,12 @@ def main():
     solver.stop_sim_time = stop_sim_time
 
     # Analysis
-    snapshots = solver.evaluator.add_file_handler('snapshots', sim_dt=0.25, max_writes=50, mode=fh_mode)
+    snapshots = solver.evaluator.add_file_handler('snapshots', sim_dt=0.05, max_writes=250, mode=fh_mode)
     snapshots.add_system(solver.state)
 
     # CFL
-    CFL = flow_tools.CFL(solver, initial_dt=dt, cadence=10, safety=1,
-                         max_change=1.5, min_change=0.5, max_dt=0.125, threshold=0.05)
+    CFL = flow_tools.CFL(solver, initial_dt=dt, cadence=1, safety=1,
+                         max_change=1.5, min_change=0., max_dt=0.125, threshold=0.05)
     CFL.add_velocities(('u', 'w'))
 
     # Flow properties
